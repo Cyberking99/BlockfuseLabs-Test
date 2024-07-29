@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Book;
 
 class BookController extends Controller
 {
@@ -11,7 +12,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        return Book::with('author')->paginate(10);
     }
 
     /**
@@ -19,7 +20,16 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author_id' => 'required|exists:authors,id',
+            'publication_year' => 'required|integer',
+            'genre' => 'required|string|max:255',
+        ]);
+
+        $book = Book::create($request->all());
+
+        return response()->json($book, 201);
     }
 
     /**
@@ -27,7 +37,7 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Book::with('author')->findOrFail($id);
     }
 
     /**
@@ -35,7 +45,18 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $book = Book::findOrFail($id);
+
+        $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'author_id' => 'sometimes|required|exists:authors,id',
+            'publication_year' => 'sometimes|required|integer',
+            'genre' => 'sometimes|required|string|max:255',
+        ]);
+
+        $book->update($request->all());
+
+        return response()->json($book, 200);
     }
 
     /**
@@ -43,6 +64,8 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Book::findOrFail($id)->delete();
+
+        return response()->json(null, 204);
     }
 }
