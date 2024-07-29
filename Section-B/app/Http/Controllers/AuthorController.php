@@ -11,7 +11,7 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
+        return Author::all();
     }
 
     /**
@@ -19,7 +19,14 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'bio' => 'nullable|string',
+        ]);
+
+        $author = Author::create($request->all());
+
+        return response()->json($author, 201);
     }
 
     /**
@@ -27,7 +34,7 @@ class AuthorController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Author::findOrFail($id);
     }
 
     /**
@@ -35,7 +42,16 @@ class AuthorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $author = Author::findOrFail($id);
+
+        $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'bio' => 'nullable|string',
+        ]);
+
+        $author->update($request->all());
+
+        return response()->json($author, 200);
     }
 
     /**
@@ -43,6 +59,8 @@ class AuthorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Author::findOrFail($id)->delete();
+
+        return response()->json(null, 204);
     }
 }
