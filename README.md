@@ -108,3 +108,12 @@ Make sure you have the following installed on your machine:
 ### Running the Project
 
 To run the project, use the following command:
+
+   ```bash
+   php artisan serve
+   ```
+
+### API Documentation
+
+The postman documentation link for the API is:
+[https://documenter.getpostman.com/view/17144184/2sA3kaDehd](https://documenter.getpostman.com/view/17144184/2sA3kaDehd)
